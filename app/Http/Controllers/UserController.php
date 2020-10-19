@@ -65,7 +65,12 @@ Class UserController extends Controller {
      */
     public function show($id)
     {
-        // $user = User::findOrFail($id);
+
+         $user = User::findOrFail($id);
+         return $this->successResponse($user);
+         
+        // old code 
+        /*
         $user = User::where('userid', $id)->first();
         if($user){
             return $this->successResponse($user);
@@ -73,6 +78,7 @@ Class UserController extends Controller {
         {
             return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
         }
+        */
     }
 
     /**
@@ -88,22 +94,38 @@ Class UserController extends Controller {
         ];
 
         $this->validate($request, $rules);
-        //$user = User::findOrFail($id);
-        $user = User::where('userid', $id)->first();
-        if($user){
-            $user->fill($request->all());
+        $user = User::findOrFail($id);
+            
+        $user->fill($request->all());
 
-            // if no changes happen
-            if ($user->isClean()) {
-                return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+        // if no changes happen
+        if ($user->isClean()) {
+            return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $user->save();
+        return $this->successResponse($user);
+       
+        // old code
+        /*
+            $this->validate($request, $rules);
+            //$user = User::findOrFail($id);
+            $user = User::where('userid', $id)->first();
+            if($user){
+                $user->fill($request->all());
+
+                // if no changes happen
+                if ($user->isClean()) {
+                    return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                $user->save();
+                return $this->successResponse($user);
             }
-
-            $user->save();
-            return $this->successResponse($user);
-        }
-        {
-            return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
-        }
+            {
+                return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
+            }
+        */
     }
 
        /**
@@ -112,8 +134,13 @@ Class UserController extends Controller {
      */
     public function delete($id)
     {
-        //$user = User::findOrFail($id);
-         $user = User::where('userid', $id)->first();
+        $user = User::findOrFail($id);
+        $user->delete();
+        return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
+
+        // old code 
+        /*
+        $user = User::where('userid', $id)->first();
         if($user){
             $user->delete();
             return $this->successResponse($user);
@@ -121,6 +148,7 @@ Class UserController extends Controller {
         {
             return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
         }
+        */
     }
 
 }
