@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 //use App\User;
-use App\Models\User;  // <-- your model
-use Illuminate\Http\Response;
+use App\Models\User;  // <-- your model is located insired Models Folder
+use Illuminate\Http\Response; // Response Components
 use App\Traits\ApiResponser;  // <-- use to standardized our code for api response
 use Illuminate\Http\Request;  // <-- handling http request in lumen
 use DB; // <-- if your not using lumen eloquent you can use DB component in lumen
 
-
 Class UserController extends Controller {
+    // use to add your Traits ApiResponser
     use ApiResponser;
 
     private $request;
@@ -38,14 +38,17 @@ Class UserController extends Controller {
     public function index()
     {
         $users = User::all();
-
+        return $this->successResponse($users);
+        // old code
+        /*
         // return $users; // <-- not standardized return of data
         // return $this->successResponse($users);
-        //return response()->json($users, 200);
-        return $this->successResponse($users);
+        // return response()->json($users, 200);
+        */
+        
     }
 
-    public function addUser(Request $request ){
+    public function add(Request $request ){
         $rules = [
             'username' => 'required|max:20',
             'password' => 'required|max:20',
@@ -60,7 +63,7 @@ Class UserController extends Controller {
     }
 
     /**
-     * Obtains and show one author
+     * Obtains and show one user
      * @return Illuminate\Http\Response
      */
     public function show($id)
@@ -136,8 +139,7 @@ Class UserController extends Controller {
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
-
+        return $this->successResponse($user);
         // old code 
         /*
         $user = User::where('userid', $id)->first();
