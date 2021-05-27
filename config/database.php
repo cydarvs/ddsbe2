@@ -33,7 +33,7 @@ return [
 
     'migrations' => 'migrations',
     'connections' => [
-
+        // edit the database.php
         'mysql' => [
             'driver'        => 'mysql',
             'host'          => env('DB_HOST', 'remotemysql.com'),
